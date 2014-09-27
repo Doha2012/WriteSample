@@ -5,7 +5,8 @@ import main.ReadManager;
 import main.WriteManager;
 import junit.framework.TestCase;
 
-public class TestWriteManager extends TestCase {
+public class TestWriter extends TestCase {
+
     private WriteManager writer;
     private ReadManager reader;
     private String fileName1 = "test1.txt";
@@ -13,7 +14,7 @@ public class TestWriteManager extends TestCase {
     private String fileName3 = "test3.txt";
     private String fileName4 = "test4.csv";
 
-    public TestWriteManager(String name) {
+    public TestWriter(String name) {
         super(name);
     }
 
@@ -26,7 +27,7 @@ public class TestWriteManager extends TestCase {
         super.tearDown();
     }
 
-    public void testWriteDouble() {
+    public void testWriteDouble_thenReadIt_shouldBeTheSame() {
         double value = 2.5;
         writer.setFileName(fileName1);
         writer.writeDouble(value);
@@ -34,18 +35,18 @@ public class TestWriteManager extends TestCase {
         assertEquals(value, reader.readDouble(), 0.0000001);
     }
 
-    public void testWriteToPosition() {
+    public void testWriteToPosition_editValueIfSpecificPos_shouldChange() {
         int data1 = 2014;
         int data2 = 1500;
         writer.setFileName(fileName2);
-        writer.writeToPosition(data1, 4);
-        writer.writeToPosition(data2, 0);
         reader.setFileName(fileName2);
+        writer.writeToPosition(data1, 4);
         assertEquals(data1, reader.readFromPosition(4));
-        assertEquals(data2, reader.readFromPosition(0));
+        writer.writeToPosition(data2, 4);
+        assertEquals(data2, reader.readFromPosition(4));
     }
 
-    public void testWriteObject() {
+    public void testWriteObject_thenReadIt_instanceVariableValuesShouldBeTheSame() {
         Foo foo = new Foo(1, "John");
         writer.setFileName(fileName3);
         writer.writeObject(foo);
@@ -55,7 +56,7 @@ public class TestWriteManager extends TestCase {
         assertEquals(foo.getName(), read.getName());
     }
 
-    public void testWriteCSVReport() {
+    public void testWriteCSVReport_thenReadAllData_shouldBeTheSame() {
         Foo[] arr = new Foo[3];
         arr[0] = new Foo(1, "John");
         arr[1] = new Foo(2, "Adam");
@@ -68,4 +69,7 @@ public class TestWriteManager extends TestCase {
         assertEquals(arr[2].getName(), read[2].getName());
         assertEquals(arr[1].getId(), read[1].getId());
     }
+
+
+    
 }
